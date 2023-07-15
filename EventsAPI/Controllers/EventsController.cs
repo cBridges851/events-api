@@ -44,5 +44,23 @@ namespace EventsAPI.Controllers {
                 StatusCode = HttpStatusCode.OK
             };
         }
+
+        [HttpDelete]
+        [Route("Delete")]
+        public HttpResponseMessage DeleteEvent([FromBody] Guid id) {
+            var existingEvent = this.events.FirstOrDefault(x => x.Id == id);
+
+            if (existingEvent is null) {
+                return new HttpResponseMessage {
+                    StatusCode = HttpStatusCode.NotFound
+                };
+            }
+
+            this.events.Remove(existingEvent);
+
+            return new HttpResponseMessage { 
+                StatusCode = HttpStatusCode.OK
+            };
+        }
     }
 }
