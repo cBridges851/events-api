@@ -19,5 +19,10 @@ namespace EventsAPI.Controllers {
         public Event? GetEvent(Guid id) {
             return this.events.FirstOrDefault(x => x.Id == id);
         }
+
+        [HttpPut]
+        public void CreateEvent([FromBody] Event newEvent) {
+            this.events.Add(newEvent);
+        }
     }
 }
