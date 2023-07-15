@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventsAPI", "EventsAPI\EventsAPI.csproj", "{ADD03F80-D7BC-4798-8084-7F1915164897}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventsAPI.Tests", "EventsAPI.Tests\EventsAPI.Tests.csproj", "{AC20C21E-90B3-46F9-8794-E0E0E9B664FC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ADD03F80-D7BC-4798-8084-7F1915164897}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADD03F80-D7BC-4798-8084-7F1915164897}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADD03F80-D7BC-4798-8084-7F1915164897}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADD03F80-D7BC-4798-8084-7F1915164897}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC20C21E-90B3-46F9-8794-E0E0E9B664FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC20C21E-90B3-46F9-8794-E0E0E9B664FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC20C21E-90B3-46F9-8794-E0E0E9B664FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC20C21E-90B3-46F9-8794-E0E0E9B664FC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3FDA418E-99BA-4178-B560-E1A739BA3799}
+	EndGlobalSection
+EndGlobal
