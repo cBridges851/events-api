@@ -1,5 +1,6 @@
 # events-api
-A scalable .NET web API I'm building to practise and evidence backend specialist topics.
+A scalable .NET web API I'm building to practise and evidence backend specialist topics.  
+![GitHub Workflow Status](https://github.com/cBridges851/events-api/actions/workflows/dotnet.yml/badge.svg?logo=github)
 
 ## Milestones:
 - Create an ASP.NET Web API with simple in-memory CRUD operations ✅ 15/07/2023
@@ -17,9 +18,9 @@ A scalable .NET web API I'm building to practise and evidence backend specialist
 
 ## How To Use
 1) Run the EventsAPI project in your IDE or via your terminal `dotnet run`
-2) You can hit the endpoints in your browser or via tools like Postman: <br>
-   Get All Events: `https://localhost:<port number>/events`<br>
-   Get Individual Event: `https://localhost:<port number>/events/<id of event>`<br>
+2) You can hit the endpoints in your browser or via tools like Postman:   
+   Get All Events: `https://localhost:<port number>/events`  
+   Get Individual Event: `https://localhost:<port number>/events/<id of event>`  
    Create Event: `https://localhost:<port number>/Events/Create`, with a JSON body like below:
    ```json
    {
