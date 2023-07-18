@@ -4,7 +4,7 @@ A scalable .NET web API I'm building to practise and evidence backend specialist
 
 ## Milestones:
 - Create an ASP.NET Web API with simple in-memory CRUD operations ✅ 15/07/2023
-- Dockerise the Web API
+- Dockerise the Web API ✅ 18/07/2023
 - Add a Postgres database with NHibernate
 - Add second-level caching
 - Add centralised logging and monitoring
@@ -16,7 +16,7 @@ A scalable .NET web API I'm building to practise and evidence backend specialist
 1) Clone the project via your terminal `https://github.com/cBridges851/events-api.git`
 2) Build the project in your IDE or via your terminal `dotnet build`
 
-This web API can also run on Docker. Build the image by running this command in your terminal: `podman build --rm -t events-api:latest .` in the directory the Dockerfile is located.
+This web API can also run on Docker. Build the image by running this command in your terminal: `docker build --rm -t events-api:latest .` in the directory the Dockerfile is located.
 
 ## How To Use
 1) Run the EventsAPI project in your IDE or via your terminal `dotnet run`
