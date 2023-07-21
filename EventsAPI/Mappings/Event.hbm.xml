@@ -1,12 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="EventsAPI" namespace="EventsAPI.Models">
 	<class name="Event" table="Event">
-		<id name="Id" column="Id">
-			<generator class="native"/>
-		</id>
-		<property name="Name" column="Name" />
-		<property name="Description" column="Description" />
-		<property name="EventType" column="EventType" />
-		<property name="Date" column="Date" />
+		<id name="Id" />
+		<property name="Name" />
+		<property name="Description" />
+		<property name="EventType" />
+		<property name="Date" />
 	</class>
 </hibernate-mapping>

@@ -8,10 +8,10 @@ namespace EventsAPI.Tests.WhenUsingTheEventsController {
     public class EventsControllerTestBase {
         protected List<Event> Events = new List<Event>();
         protected EventsController? Controller { get; set; }
-        protected ISession Session { get; set; }
+        protected ISession? Session { get; set; }
 
         [SetUp]
-        public void Setup() {
+        public void BaseSetup() {
             this.Events = new List<Event> {
                new Event {
                     Id = Guid.NewGuid(),
@@ -36,7 +36,22 @@ namespace EventsAPI.Tests.WhenUsingTheEventsController {
                }
             };
             this.Session = Substitute.For<ISession>();
-            this.Controller = new EventsController(this.Events, this.Session);
+            this.Session.CreateCriteria<Event>().List<Event>().Returns(this.Events);
+            this.Session.Get<Event>(Arg.Any<Guid>()).Returns((arg) => this.Events.FirstOrDefault(x => x.Id == arg.ArgAt<Guid>(0)));
+            this.Session.When(x => x.Save(Arg.Any<Event>())).Do(arg => this.Events.Add(arg.ArgAt<Event>(0)));
+            this.Session.When(x => x.Update(Arg.Any<Event>())).Do(arg => {
+                var updatedEvent = arg.ArgAt<Event>(0);
+                var existingEvent = this.Events.FirstOrDefault(x => x.Id == updatedEvent.Id);
+
+                if (existingEvent is null) {
+                    throw new StaleObjectStateException("", "");
+                }
+
+                this.Events.Remove(existingEvent);
+                this.Events.Add(updatedEvent);
+            });
+            this.Session.When(x => x.Delete(Arg.Any<Event>())).Do(arg => this.Events.Remove(arg.ArgAt<Event>(0)));
+            this.Controller = new EventsController(this.Session);
         }
     }
 }

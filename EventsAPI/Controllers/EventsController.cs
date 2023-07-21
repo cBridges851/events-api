@@ -7,44 +7,41 @@ namespace EventsAPI.Controllers {
     [ApiController]
     [Route("Events")]
     public class EventsController : ControllerBase {
-        private readonly List<Event> events;
         private NHibernate.ISession session;
 
-        public EventsController(List<Event> events, NHibernate.ISession session) {
-            this.events = events;
+        public EventsController(NHibernate.ISession session) {
             this.session = session;
         }
 
         [HttpGet]
         public List<Event> GetEvents() {
-            var events = this.session.CreateCriteria<Event>().List<Event>().ToList();
-            return this.events;
+            return this.session.CreateCriteria<Event>().List<Event>().ToList();
         }
 
         [HttpGet("{id}")]
         public Event? GetEvent(Guid id) {
-            return this.events.FirstOrDefault(x => x.Id == id);
+            return this.session.Get<Event>(id); 
         }
 
         [HttpPut]
         [Route("Create")]
         public void CreateEvent([FromBody] Event newEvent) {
-            this.events.Add(newEvent);
+            this.session.Save(newEvent);
+            this.session.Flush();
         }
 
         [HttpPost]
         [Route("Update")]
         public HttpResponseMessage UpdateEvent([FromBody] Event updatedEvent) {
-            var existingEvent = this.events.FirstOrDefault(x => x.Id == updatedEvent.Id);
-
-            if (existingEvent is null) {
+            try {
+                this.session.Update(updatedEvent);
+                this.session.Flush();
+            } catch (StaleObjectStateException) {
                 return new HttpResponseMessage {
                     StatusCode = HttpStatusCode.NotFound
                 };
             }
 
-            this.events.Remove(existingEvent);
-            this.events.Add(updatedEvent);
             return new HttpResponseMessage {
                 StatusCode = HttpStatusCode.OK
             };
@@ -53,15 +50,16 @@ namespace EventsAPI.Controllers {
         [HttpDelete]
         [Route("Delete")]
         public HttpResponseMessage DeleteEvent([FromBody] Guid id) {
-            var existingEvent = this.events.FirstOrDefault(x => x.Id == id);
+            var eventToDelete = this.session.Get<Event>(id);
 
-            if (existingEvent is null) {
+            if (eventToDelete is null) {
                 return new HttpResponseMessage {
                     StatusCode = HttpStatusCode.NotFound
                 };
             }
 
-            this.events.Remove(existingEvent);
+            this.session.Delete(eventToDelete);
+            this.session.Flush();
 
             return new HttpResponseMessage { 
                 StatusCode = HttpStatusCode.OK

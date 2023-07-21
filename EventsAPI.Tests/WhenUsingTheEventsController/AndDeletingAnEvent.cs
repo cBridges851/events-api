@@ -23,7 +23,7 @@ namespace EventsAPI.Tests.WhenUsingTheEventsController {
             var nonExistentEventId = Guid.NewGuid();
             var result = this.Controller?.DeleteEvent(nonExistentEventId);
             var allEvents = this.Controller?.GetEvents();
-            Assert.AreEqual(result?.StatusCode, HttpStatusCode.NotFound);
+            Assert.AreEqual(HttpStatusCode.NotFound, result?.StatusCode);
             Assert.AreEqual(3, allEvents?.Count);
             var containsEvent = this.Events.Any(x => x.Id == nonExistentEventId);
             Assert.IsFalse(containsEvent);
