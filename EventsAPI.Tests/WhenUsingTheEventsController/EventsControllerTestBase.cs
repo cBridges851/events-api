@@ -1,11 +1,14 @@
 ﻿using EventsAPI.Controllers;
 using EventsAPI.Models;
+using NHibernate;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace EventsAPI.Tests.WhenUsingTheEventsController {
     public class EventsControllerTestBase {
         protected List<Event> Events = new List<Event>();
         protected EventsController? Controller { get; set; }
+        protected ISession Session { get; set; }
 
         [SetUp]
         public void Setup() {
@@ -32,7 +35,8 @@ namespace EventsAPI.Tests.WhenUsingTheEventsController {
                     EventType= EventType.InPerson
                }
             };
-            this.Controller = new EventsController(this.Events);
+            this.Session = Substitute.For<ISession>();
+            this.Controller = new EventsController(this.Events, this.Session);
         }
     }
 }

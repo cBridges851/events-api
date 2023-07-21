@@ -1,10 +1,10 @@
 ﻿namespace EventsAPI.Models {
     public class Event {
-        public Guid Id { get; set; } = Guid.NewGuid();
-        public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
-        public EventType EventType { get; set; }
-        public DateTime Date { get; set; }
+        public virtual Guid Id { get; set; } = Guid.NewGuid();
+        public virtual string Name { get; set; } = string.Empty;
+        public virtual string Description { get; set; } = string.Empty;
+        public virtual EventType EventType { get; set; }
+        public virtual DateTime Date { get; set; }
     }
 
     public enum EventType { 

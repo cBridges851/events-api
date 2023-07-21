@@ -1,18 +1,23 @@
 using EventsAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using NHibernate;
 
 namespace EventsAPI.Controllers {
     [ApiController]
     [Route("Events")]
     public class EventsController : ControllerBase {
         private readonly List<Event> events;
-        public EventsController(List<Event> events) {
+        private NHibernate.ISession session;
+
+        public EventsController(List<Event> events, NHibernate.ISession session) {
             this.events = events;
+            this.session = session;
         }
 
         [HttpGet]
         public List<Event> GetEvents() {
+            var events = this.session.CreateCriteria<Event>().List<Event>().ToList();
             return this.events;
         }
 
