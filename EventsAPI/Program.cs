@@ -1,4 +1,6 @@
+using EventsAPI.Migration;
 using EventsAPI.Models;
+using FluentMigrator.Runner;
 using NHibernate.Cfg;
 using NHibernate.Dialect;
 using NHibernate.Driver;
@@ -22,9 +24,24 @@ builder.Services.AddHealthChecks();
 
 // NHibernate
 var rawConfig = new Configuration();
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 rawConfig.SetNamingStrategy(new PostgresNamingStrategy());
+
+var serviceProvider = builder.Services.AddFluentMigratorCore()
+    .ConfigureRunner(rb => rb
+        .AddPostgres()
+        .WithGlobalConnectionString(connectionString)
+        .ScanIn(typeof(AddEventTable).Assembly).For.Migrations())
+    .AddLogging(lb => lb.AddFluentMigratorConsole())
+    .BuildServiceProvider();
+
+using (var scope = serviceProvider.CreateScope()) {
+    var runner = serviceProvider.GetRequiredService<IMigrationRunner>();
+    runner.MigrateUp();
+}
+
 rawConfig.DataBaseIntegration(x => {
-    x.ConnectionString = "Host=localhost;Database=postgres;User ID=postgres;Password=mX8TysRsj90Tc9eXeypK;Enlist=false;";
+    x.ConnectionString = connectionString;
     x.Dialect<PostgreSQL83Dialect>();
     x.Driver<NpgsqlDriver>();
 });
