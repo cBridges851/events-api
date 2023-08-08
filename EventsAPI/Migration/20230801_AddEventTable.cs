@@ -9,7 +9,7 @@ namespace EventsAPI.Migration {
 
         public override void Up() {
             Create.Table("Event")
-                .WithColumn("Id").AsGuid().PrimaryKey().Identity()
+                .WithColumn("Id").AsString().Unique().PrimaryKey()
                 .WithColumn("Name").AsString()
                 .WithColumn("Description").AsString()
                 .WithColumn("EventType").AsInt32()
