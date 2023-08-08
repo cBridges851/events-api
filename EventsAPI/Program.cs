@@ -21,6 +21,12 @@ builder.Services.AddSingleton(_ = new List<Event> {
 });
 
 builder.Services.AddHealthChecks();
+// Redis
+Console.WriteLine(builder.Configuration.GetConnectionString("Redis"));
+builder.Services.AddStackExchangeRedisCache(options => {
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "EventsAPI_";
+});
 
 // NHibernate
 var rawConfig = new Configuration();

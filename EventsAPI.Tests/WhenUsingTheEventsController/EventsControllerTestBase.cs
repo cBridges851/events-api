@@ -1,5 +1,6 @@
 ﻿using EventsAPI.Controllers;
 using EventsAPI.Models;
+using Microsoft.Extensions.Caching.Distributed;
 using NHibernate;
 using NSubstitute;
 using NUnit.Framework;
@@ -7,8 +8,14 @@ using NUnit.Framework;
 namespace EventsAPI.Tests.WhenUsingTheEventsController {
     public class EventsControllerTestBase {
         protected List<Event> Events = new List<Event>();
-        protected EventsController? Controller { get; set; }
+
+        protected IDistributedCache? Cache { get; private set; }
         protected ISession? Session { get; set; }
+        protected EventsController Controller { get; set; }
+
+        protected EventsControllerTestBase() {
+            this.Controller = new EventsController(Substitute.For<ISession>(), Substitute.For<IDistributedCache>());
+        }
 
         [SetUp]
         public void BaseSetup() {
@@ -51,7 +58,8 @@ namespace EventsAPI.Tests.WhenUsingTheEventsController {
                 this.Events.Add(updatedEvent);
             });
             this.Session.When(x => x.Delete(Arg.Any<Event>())).Do(arg => this.Events.Remove(arg.ArgAt<Event>(0)));
-            this.Controller = new EventsController(this.Session);
+            this.Cache = Substitute.For<IDistributedCache>();
+            this.Controller = new EventsController(this.Session, this.Cache);
         }
     }
 }

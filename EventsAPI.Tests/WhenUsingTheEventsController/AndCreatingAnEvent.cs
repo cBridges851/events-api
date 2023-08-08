@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace EventsAPI.Tests.WhenUsingTheEventsController {
     public class AndCreatingAnEvent : EventsControllerTestBase {
         [Test]
-        public void WhenAnEventIsGivenItShouldBeSaved() {
+        public async Task WhenAnEventIsGivenItShouldBeSaved() {
             var name = "World Domination Plotting";
             var description = "Figuring out how to take over the world, " +
                 "so everyone will wear cat ears and there will be glitter everywhere";
@@ -17,8 +17,8 @@ namespace EventsAPI.Tests.WhenUsingTheEventsController {
                 EventType = type
             };
 
-            this.Controller?.CreateEvent(newEvent);
-            var allEvents = this.Controller?.GetEvents();
+            this.Controller.CreateEvent(newEvent);
+            var allEvents = await this.Controller.GetEvents();
             var retrievedEvent = allEvents?.FirstOrDefault(x => x.Name == name);
             Assert.AreEqual(4, allEvents?.Count);
             Assert.NotNull(retrievedEvent?.Id);

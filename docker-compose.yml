@@ -8,7 +8,8 @@ services:
   events-app:
     image: localhost/events-api:latest
     depends_on:
-      - "events_db"
+      - events_db
+      - events_cache
     container_name: event-services
     ports:
       - "8088:80"
@@ -17,7 +18,15 @@ services:
       dockerfile: Dockerfile
     environment:
       - ConnectionStrings__DefaultConnection=User ID=postgres; Password=postgres; Server=events_db; Port=5432; Database=EventsDB; IntegratedSecurity=true; Pooling=true;
+      - ConnectionStrings__Redis=events_cache:6379
       - ASPNETCORE_URLS=http://+:80
+    networks:
+      - dev
+
+  events_cache:
+    image: redis
+    container_name: events_cache
+    restart: always
     networks:
       - dev
 

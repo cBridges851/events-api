@@ -6,10 +6,10 @@ namespace EventsAPI.Tests.WhenUsingTheEventsController {
     public class AndGettingEvents : EventsControllerTestBase {
 
         [Test]
-        public void WhenNoIdIsPassedThenItShouldReturnAllEvents() {
-            var returnedEvents = this.Controller?.GetEvents();
+        public async Task WhenNoIdIsPassedThenItShouldReturnAllEvents() {
+            var returnedEvents = await this.Controller.GetEvents();
             Assert.IsNotNull(returnedEvents);
-            Assert.AreEqual(3, returnedEvents?.Count);
+            Assert.AreEqual(3, returnedEvents.Count);
         }
 
         [Test]
