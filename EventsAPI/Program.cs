@@ -1,5 +1,6 @@
 using EventsAPI.Migration;
 using EventsAPI.Models;
+using EventsAPI.Services;
 using FluentMigrator.Runner;
 using NHibernate.Cfg;
 using NHibernate.Dialect;
@@ -10,15 +11,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-builder.Services.AddSingleton(_ = new List<Event> {
-    new Event {
-        Id = Guid.NewGuid(),
-        Name = "Extreme Squirrel Juggling",
-        Description = "Meep",
-        Date = DateTime.UtcNow,
-        EventType = EventType.Online
-    }
-});
+//builder.Services.AddSingleton(_ = new List<Event> {
+//    new Event {
+//        Id = Guid.NewGuid(),
+//        Name = "Extreme Squirrel Juggling",
+//        Description = "Meep",
+//        Date = DateTime.UtcNow,
+//        EventType = EventType.Online
+//    }
+//});
 
 builder.Services.AddHealthChecks();
 // Redis
@@ -54,9 +55,8 @@ rawConfig.DataBaseIntegration(x => {
 rawConfig.AddAssembly(Assembly.GetExecutingAssembly());
 var sessionFactory = rawConfig.BuildSessionFactory();
 builder.Services.AddSingleton(sessionFactory);
-builder.Services.AddScoped(_ => sessionFactory.OpenSession());
-
-
+builder.Services.AddSingleton(_ => sessionFactory.OpenSession());
+builder.Services.AddSingleton(typeof(IDataService<>), typeof(DataService<>));
 var app = builder.Build();
 
 app.MapHealthChecks("/health");

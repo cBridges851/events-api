@@ -1,21 +1,15 @@
 ﻿using EventsAPI.Controllers;
 using EventsAPI.Models;
-using Microsoft.Extensions.Caching.Distributed;
-using NHibernate;
+using EventsAPI.Services;
 using NSubstitute;
 using NUnit.Framework;
+using System.Linq.Expressions;
 
 namespace EventsAPI.Tests.WhenUsingTheEventsController {
     public class EventsControllerTestBase {
         protected List<Event> Events = new List<Event>();
-
-        protected IDistributedCache? Cache { get; private set; }
-        protected ISession? Session { get; set; }
+        protected IDataService<Event> DataService { get; private set; }
         protected EventsController Controller { get; set; }
-
-        protected EventsControllerTestBase() {
-            this.Controller = new EventsController(Substitute.For<ISession>(), Substitute.For<IDistributedCache>());
-        }
 
         [SetUp]
         public void BaseSetup() {
@@ -42,24 +36,33 @@ namespace EventsAPI.Tests.WhenUsingTheEventsController {
                     EventType= EventType.InPerson
                }
             };
-            this.Session = Substitute.For<ISession>();
-            this.Session.CreateCriteria<Event>().List<Event>().Returns(this.Events);
-            this.Session.Get<Event>(Arg.Any<Guid>()).Returns((arg) => this.Events.FirstOrDefault(x => x.Id == arg.ArgAt<Guid>(0)));
-            this.Session.When(x => x.Save(Arg.Any<Event>())).Do(arg => this.Events.Add(arg.ArgAt<Event>(0)));
-            this.Session.When(x => x.Update(Arg.Any<Event>())).Do(arg => {
-                var updatedEvent = arg.ArgAt<Event>(0);
-                var existingEvent = this.Events.FirstOrDefault(x => x.Id == updatedEvent.Id);
 
-                if (existingEvent is null) {
-                    throw new StaleObjectStateException("", "");
+            this.DataService = Substitute.For<IDataService<Event>>();
+            this.DataService.GetAll().Returns(this.Events);
+            this.DataService.Get<Event>(Arg.Any<Expression<Func<Event, object>>>(), Arg.Any<object>()).Returns((arg) => this.Events.FirstOrDefault(
+                x => x.Id == arg.ArgAt<Guid>(1))
+            );
+            this.DataService.Delete(Arg.Any<Guid>()).Returns(arg => {
+                var eventToDelete = this.Events.FirstOrDefault(x => x.Id == arg.ArgAt<Guid>(0));
+                if (eventToDelete is null) {
+                    return false;
                 }
 
-                this.Events.Remove(existingEvent);
-                this.Events.Add(updatedEvent);
+                this.Events.Remove(eventToDelete);
+                return true;
             });
-            this.Session.When(x => x.Delete(Arg.Any<Event>())).Do(arg => this.Events.Remove(arg.ArgAt<Event>(0)));
-            this.Cache = Substitute.For<IDistributedCache>();
-            this.Controller = new EventsController(this.Session, this.Cache);
+
+            this.DataService.When(x => x.Create(Arg.Any<Event>())).Do(arg => this.Events.Add(arg.ArgAt<Event>(0)));
+            this.DataService.Update(Arg.Any<Event>()).Returns(arg => { 
+                var eventToUpdate = this.Events.FirstOrDefault(x => x.Id == arg.ArgAt<Event>(0).Id);
+
+                if (eventToUpdate is null) { return false; }
+
+                this.Events.Remove(eventToUpdate);
+                this.Events.Add(arg.ArgAt<Event>(0));
+                return true;
+            });
+            this.Controller = new EventsController(this.DataService);
         }
     }
 }
