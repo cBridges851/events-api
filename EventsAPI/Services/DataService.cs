@@ -12,6 +12,7 @@ namespace EventsAPI.Services {
         public DataService(NHibernate.ISession session, IDistributedCache cache) {
             this.session = session;
             this.cache = cache;
+            this.values = this.GetAll().GetAwaiter().GetResult();
         }
 
         public async Task<List<T>> GetAll() {
@@ -45,15 +46,32 @@ namespace EventsAPI.Services {
         }
 
         public void Create(T newObject) {
-            throw new NotImplementedException();
+            this.session.Save(newObject);
+            this.session.Flush();
         }
 
         public bool Update(T updatedObject) {
-            throw new NotImplementedException();
+            try {
+                this.session.Merge(updatedObject);
+                this.session.Flush();
+            } catch {
+                return false;
+            }
+
+            return true;
         }
 
         public bool Delete(Guid id) {
-            throw new NotImplementedException();
+            var eventToDelete = this.session.Get<T>(id);
+
+            if (eventToDelete is null) {
+                return false;
+            }
+
+            this.session.Delete(eventToDelete);
+            this.session.Flush();
+
+            return true;
         }
     }
 }

@@ -1,9 +1,6 @@
 using EventsAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using NHibernate;
-using Microsoft.Extensions.Caching.Distributed;
-using EventsAPI.Extensions;
 using EventsAPI.Services;
 
 namespace EventsAPI.Controllers {
@@ -33,8 +30,6 @@ namespace EventsAPI.Controllers {
         [Route("Create")]
         public void CreateEvent([FromBody] Event newEvent) {
             this.dataService.Create(newEvent);
-            //this.session.Save(newEvent);
-            //this.session.Flush();
         }
 
         [HttpPost]
@@ -45,18 +40,6 @@ namespace EventsAPI.Controllers {
             }
 
             return new HttpResponseMessage(HttpStatusCode.NotFound);
-            //try {
-            //    this.session.Update(updatedEvent);
-            //    this.session.Flush();
-            //} catch (StaleObjectStateException) {
-            //    return new HttpResponseMessage {
-            //        StatusCode = HttpStatusCode.NotFound
-            //    };
-            //}
-
-            //return new HttpResponseMessage {
-            //    StatusCode = HttpStatusCode.OK
-            //};
         }
 
         [HttpDelete]
@@ -67,21 +50,6 @@ namespace EventsAPI.Controllers {
             }
 
             return new HttpResponseMessage(HttpStatusCode.NotFound);
-
-            //var eventToDelete = this.session.Get<Event>(id);
-
-            //if (eventToDelete is null) {
-            //    return new HttpResponseMessage {
-            //        StatusCode = HttpStatusCode.NotFound
-            //    };
-            //}
-
-            //this.session.Delete(eventToDelete);
-            //this.session.Flush();
-
-            //return new HttpResponseMessage { 
-            //    StatusCode = HttpStatusCode.OK
-            //};
         }
     }
 }
