@@ -3,10 +3,10 @@ A scalable .NET web API I'm building to practise and evidence backend specialist
 ![GitHub Workflow Status](https://github.com/cBridges851/events-api/actions/workflows/dotnet.yml/badge.svg?logo=github)
 
 ## Milestones:
-- Create an ASP.NET Web API with simple in-memory CRUD operations ✅ 15/07/2023
-- Dockerise the Web API ✅ 18/07/2023
-- Add a Postgres database with NHibernate ✅ 01/08/2023
-- Add second-level caching
+- Create an ASP.NET Web API with simple in-memory CRUD operations ✅ 
+- Dockerise the Web API ✅ 
+- Add a Postgres database with NHibernate ✅ 
+- Add second-level caching ✅
 - Add centralised logging and monitoring
 - Add a service layer with MassTransit and RabbitMQ
 - Implement CQRS
